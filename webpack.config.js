@@ -1,12 +1,8 @@
 const path = require('path');
-const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
-const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 
@@ -25,37 +21,32 @@ module.exports = {
         'main.min': './src/main.ts' //app main file
     },
     output: {
-        path: root('dist'),
-        filename: '[name].js',
-        sourceMapFilename: '[name].map',
+        path: root('dist/js'),
+        filename: '[name].js'
     },
     resolve: {
-        extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.sass', '.html'], // <-- include .scss
-        fallback: [path.join(__dirname, './node_modules')], //default to node_modules when not found
+        extensions: ['', '.ts', '.js'],
         alias: {
             'vue$': 'vue/dist/vue.common.js'
         }
     },
-    resolveLoader: {
-        fallback: [path.join(__dirname, './node_modules')]
-    },
     module: {
-        loaders: [
+        preLoaders: [
             {
                 test: /\.ts$/,
-                loader: 'ts-loader',
-                exclude: [/\.(spec|e2e)\.ts$/]
-            },
-            { test: /\.json$/, loader: 'json-loader' },
-            { test: /\.css$/, loaders: ['style', 'css'] },
-            { test: /\.html$/, loader: 'raw-loader', exclude: [ root('src/index.html') ] },
-            { test: /\.(scss|sass)$/, loaders: ['style', 'css', 'sass'] }
+                loader: 'tslint-loader'
+            }
+        ],
+        loaders: [
+            { test: /\.ts$/, exclude: /node_modules/, loader: "ts-loader" },
+            { test: /\.html$/, loader: 'raw-loader', exclude: [ './src/index.html' ] }
         ]
     },
-    postcss: [autoprefixer], // <--- postcss
     plugins: [
-        new CopyWebpackPlugin([{ from: 'src/assets', to: 'assets' }]),
-        new HtmlWebpackPlugin({ template: 'src/index.html', excludeChunks: ['main.min'] }),
+        new CopyWebpackPlugin([
+            { from: 'src/assets', to: '../assets' },
+            { from: 'src/css', to: '../css' }
+        ]),
         new DefinePlugin({
             'process.env': {
                 'ENV': JSON.stringify(metadata.ENV),
@@ -82,9 +73,4 @@ module.exports = {
 function root(args) {
     args = Array.prototype.slice.call(arguments, 0);
     return path.join.apply(path, [__dirname].concat(args));
-}
-
-function rootNode(args) {
-    args = Array.prototype.slice.call(arguments, 0);
-    return root.apply(path, ['node_modules'].concat(args));
 }

@@ -1,3 +1,7 @@
 node_modules
 typings
 dist
+coverage
+src/css
+src/**/*.js
+src/**/*.map

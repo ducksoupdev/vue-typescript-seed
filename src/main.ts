@@ -1,8 +1,6 @@
 import * as Vue from 'vue';
 import * as VueRouter from 'vue-router';
 
-require('./main.scss'); //global css
-
 import { HomeComponent } from './components/home/home';
 import { AboutComponent } from './components/about/about';
 import { ListComponent } from './components/list/list';
@@ -11,7 +9,7 @@ import { NavbarComponent } from './components/navbar/navbar';
 // register the plugin
 Vue.use(VueRouter);
 
-var router = new VueRouter({
+let router = new VueRouter({
   routes: [
     { path: '/', component: HomeComponent },
     { path: '/about', component: AboutComponent },
