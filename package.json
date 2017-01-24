@@ -10,7 +10,7 @@
         "compile": "webpack",
         "coverage": "karma start karma.coverage.js && npm run ts-coverage-remap && npm run coverage-report-open",
         "coverage-report-open": "http-server coverage/html-ts/ -o -p 8888",
-        "develop": "npm run sass && concurrent --kill-others \"webpack --watch\" \"node-sass --watch --output ./css/css ./src/sass\" \"live-server --quiet --open=src/\"",
+        "develop": "npm run sass && concurrent --kill-others \"webpack --watch\" \"node-sass --watch --output ./src/css ./src/sass\" \"live-server --quiet --open=src/\"",
         "dist": "npm run clean && npm run test && npm run sass && npm run build && npm run clean-css && npm run process-html",
         "lint": "ts-node ./scripts/ts-lint.ts -f src/**/*.ts",
         "process-html": "htmlprocessor src/index.html -o dist/index.html",
